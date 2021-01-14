@@ -216,6 +216,7 @@ public class ThreadLocal<T> {
      *        this thread-local.
      */
     public void set(T value) {
+        // 以当前线程为key
         Thread t = Thread.currentThread();
         ThreadLocalMap map = getMap(t);
         if (map != null) {
@@ -480,6 +481,7 @@ public class ThreadLocal<T> {
 
             Entry[] tab = table;
             int len = tab.length;
+            // 实际操作就是取hashcode二进制的后几位 101010 & 111 = 010
             int i = key.threadLocalHashCode & (len-1);
 
             for (Entry e = tab[i];

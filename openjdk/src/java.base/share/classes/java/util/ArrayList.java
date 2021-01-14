@@ -254,6 +254,7 @@ public class ArrayList<E> extends AbstractList<E>
     private int newCapacity(int minCapacity) {
         // overflow-conscious code
         int oldCapacity = elementData.length;
+        // 右移一位相当于除2，所以，newCapacity相当于oldCapacity的1.5倍
         int newCapacity = oldCapacity + (oldCapacity >> 1);
         if (newCapacity - minCapacity <= 0) {
             if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
@@ -266,7 +267,7 @@ public class ArrayList<E> extends AbstractList<E>
             ? newCapacity
             : hugeCapacity(minCapacity);
     }
-
+    // huge adj.巨大
     private static int hugeCapacity(int minCapacity) {
         if (minCapacity < 0) // overflow
             throw new OutOfMemoryError();
@@ -980,9 +981,9 @@ public class ArrayList<E> extends AbstractList<E>
      * An optimized version of AbstractList.Itr
      */
     private class Itr implements Iterator<E> {
-        int cursor;       // index of next element to return
-        int lastRet = -1; // index of last element returned; -1 if no such
-        int expectedModCount = modCount;
+        int cursor;       // index of next element to return 下一个要返回的元素位置
+        int lastRet = -1; // index of last element returned; -1 if no such 最后一个返回的索引位置，如果没有，则为-1
+        int expectedModCount = modCount; // 期望的修改次数
 
         // prevent creating a synthetic constructor
         Itr() {}
@@ -1036,7 +1037,7 @@ public class ArrayList<E> extends AbstractList<E>
                 checkForComodification();
             }
         }
-
+        // 检查是否发生了结构性变化
         final void checkForComodification() {
             if (modCount != expectedModCount)
                 throw new ConcurrentModificationException();

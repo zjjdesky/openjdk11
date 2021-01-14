@@ -376,6 +376,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * we can only terminate if, after seeing that it is empty, we see
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
+     * 存放线程池的运行状态(runState)和线程池内有效线程的数量(workCount)
      */
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
     private static final int COUNT_BITS = Integer.SIZE - 3;
@@ -1279,13 +1280,13 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * @throws NullPointerException if {@code workQueue}
      *         or {@code threadFactory} or {@code handler} is null
      */
-    public ThreadPoolExecutor(int corePoolSize,
-                              int maximumPoolSize,
-                              long keepAliveTime,
-                              TimeUnit unit,
-                              BlockingQueue<Runnable> workQueue,
-                              ThreadFactory threadFactory,
-                              RejectedExecutionHandler handler) {
+    public ThreadPoolExecutor(int corePoolSize,  // 核心线程数  最小可以同时运行的线程数量
+                              int maximumPoolSize, // 最大线程数  当前队列存放的任务达到队列容量的时候
+                              long keepAliveTime, // 当线程池中的线程数量大于 corePoolSize 的时候，如果这时没有新的任务提交，核心线程外的线程不会立即销毁，而是会等待，直到等待的时间超过了 keepAliveTime才会被回收销毁；
+                              TimeUnit unit, // keepAliveTime参数的时间单位
+                              BlockingQueue<Runnable> workQueue, // 任务队列
+                              ThreadFactory threadFactory, // 线程工厂 用来创建线程，
+                              RejectedExecutionHandler handler) { // 拒绝策略
         if (corePoolSize < 0 ||
             maximumPoolSize <= 0 ||
             maximumPoolSize < corePoolSize ||
@@ -1338,19 +1339,29 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * thread.  If it fails, we know we are shut down or saturated
          * and so reject the task.
          */
-        int c = ctl.get();
+        int c = ctl.get(); // 获取一些线程的状态信息
+        // 1. 首先判断当前线程池中执行的任务数量是否小于 corePoolSize
+        //    如果小于的话，通过addWorker(command, true)新建一个线程，
+        //    并将任务(command)添加到该线程中；然后，启动该线程从而执行任务
         if (workerCountOf(c) < corePoolSize) {
             if (addWorker(command, true))
                 return;
             c = ctl.get();
         }
+        // 2. 如果当前执行的任务数量大于等于 corePoolSize 的时候
+        //    通过 isRunning 方法判断线程池状态
+        //    线程池处于 RUNNING 状态 任务才会被加到队列中去
         if (isRunning(c) && workQueue.offer(command)) {
             int recheck = ctl.get();
-            if (! isRunning(recheck) && remove(command))
+            // 再次获取线程状态，如果线程状态不是RUNNING状态就需要从队列中移除任务
+            // 并尝试判断线程是否全部执行完毕。同时执行拒绝策略。
+            if (!isRunning(recheck) && remove(command))
                 reject(command);
             else if (workerCountOf(recheck) == 0)
                 addWorker(null, false);
         }
+        // 3. 通过addWorker(command, false)新建一个线程，并将任务(command)添加到该线程中；然后，启动该线程从而执行任务。
+        //    如果addWorker(command, false)执行失败，则通过reject()执行相应的拒绝策略的内容。
         else if (!addWorker(command, false))
             reject(command);
     }

@@ -19,7 +19,7 @@ public class ArrayListDemo {
      */
     @Test
     public void testAdd() {
-        List<Integer> list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         print(list);
@@ -30,7 +30,7 @@ public class ArrayListDemo {
      */
     @Test
     public void testRemove() {
-        List<Integer> list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         print(list);
@@ -43,7 +43,7 @@ public class ArrayListDemo {
      */
     @Test
     public void testForCycleRemove() {
-        List<Integer> list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
         print(list);
@@ -58,7 +58,7 @@ public class ArrayListDemo {
      */
     @Test
     public void testForCycleRemove2() {
-        List<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("1");
         list.add("2");
         print(list);
@@ -73,7 +73,7 @@ public class ArrayListDemo {
      */
     @Test
     public void testForCycleRemove3() {
-        List<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("100");
         list.add("200");
         print(list);
@@ -87,7 +87,7 @@ public class ArrayListDemo {
 
     @Test
     public void testIterator() {
-        List<String> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         list.add("100");
         list.add("200");
         Iterator<String> it = list.iterator();
@@ -97,7 +97,7 @@ public class ArrayListDemo {
         }
     }
 
-    private static <T> void print(List<T> list) {
+    private static <T> void print(ArrayList<T> list) {
         System.out.println("-------------------print start--------------------------");
         if (null == list || list.isEmpty()) {
             System.out.println("no data ...");

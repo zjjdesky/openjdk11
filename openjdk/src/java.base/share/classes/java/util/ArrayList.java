@@ -994,6 +994,7 @@ public class ArrayList<E> extends AbstractList<E>
 
         @SuppressWarnings("unchecked")
         public E next() {
+            // 检查是否发生了结构性变化
             checkForComodification();
             int i = cursor;
             if (i >= size)

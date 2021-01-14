@@ -3,6 +3,7 @@ package com.jjzhou.jdktest.collection;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,6 +25,9 @@ public class ArrayListDemo {
         print(list);
     }
 
+    /**
+     * 只remove了index=1的数据
+     */
     @Test
     public void testRemove() {
         List<Integer> list = new ArrayList<>();
@@ -31,10 +35,11 @@ public class ArrayListDemo {
         list.add(2);
         print(list);
         list.remove(1);
+        print(list);
     }
 
     /**
-     * 只remove了一个数据
+     * 只remove了第一个数据
      */
     @Test
     public void testForCycleRemove() {
@@ -45,10 +50,12 @@ public class ArrayListDemo {
         for (Integer val : list) {
             list.remove(val);
         }
-        System.out.println("----------------");
         print(list);
     }
 
+    /**
+     * 只remove了第一个数据
+     */
     @Test
     public void testForCycleRemove2() {
         List<String> list = new ArrayList<>();
@@ -58,7 +65,6 @@ public class ArrayListDemo {
         for (String val : list) {
             list.remove(val);
         }
-        System.out.println("----------------");
         print(list);
     }
 
@@ -76,11 +82,23 @@ public class ArrayListDemo {
                 list.remove(val);
             }
         }
-        System.out.println("----------------");
         print(list);
     }
 
+    @Test
+    public void testIterator() {
+        List<String> list = new ArrayList<>();
+        list.add("100");
+        list.add("200");
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            it.next();
+
+        }
+    }
+
     private static <T> void print(List<T> list) {
+        System.out.println("-------------------print start--------------------------");
         if (null == list || list.isEmpty()) {
             System.out.println("no data ...");
             return;
@@ -88,5 +106,7 @@ public class ArrayListDemo {
         for (T t : list) {
             System.out.print(t + "\t");
         }
+        System.out.println();
+        System.out.println("-------------------print end----------------------------");
     }
 }
